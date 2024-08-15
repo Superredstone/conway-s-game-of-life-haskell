@@ -1,0 +1,54 @@
+name:                conways-game-of-life
+version:             0.1.0.0
+github:              "github.com/Superredstone/conway-s-game-of-life-haskell"
+license:             GPL-3
+author:              "Patrick Canal"
+maintainer:          "patrickcanal3@gmail.com"
+copyright:           "2024 Patrick Canal"
+
+extra-source-files:
+- README.md
+- CHANGELOG.md
+
+description:         Please see the README on GitHub 
+
+dependencies:
+- base >= 4.7 && < 5
+- h-raylib
+- hashmap
+
+ghc-options:
+- -Wall
+- -Wcompat
+- -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wmissing-export-lists
+- -Wmissing-home-modules
+- -Wpartial-fields
+- -Wredundant-constraints
+
+library:
+  source-dirs: src
+
+executables:
+  conways-game-of-life-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - conways-game-of-life
+
+tests:
+  conways-game-of-life-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - conways-game-of-life
