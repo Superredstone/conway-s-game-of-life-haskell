@@ -3,12 +3,11 @@
 module Main (main) where
 
 import Data.HashMap (insert)
-import GHC.Float (int2Float)
-import Lib (cellSize, drawCells, drawGrid', handleCameraMovement, handleUpdateMaxFps, handleUpdateTickSpeed, initializeCells, liveNeighborCount, mousePositionToGrid, nextCellGeneration, vector2Add, vector2Divide, vector2Scale)
+import Lib (drawCells, handleCameraMovement, handleUpdateMaxFps, handleUpdateTickSpeed, initializeCells, mousePositionToGrid, nextCellGeneration)
 import Raylib.Core
-import Raylib.Core.Shapes (drawCircle, drawRectangle)
+import Raylib.Core.Shapes (drawCircle)
 import Raylib.Core.Text (drawText)
-import Raylib.Types (Camera2D (Camera2D, camera2D'target, camera2D'zoom), MouseButton (MouseButtonLeft, MouseButtonRight), vector2'x, vector2'y, pattern Vector2)
+import Raylib.Types (Camera2D (Camera2D), MouseButton (MouseButtonLeft), vector2'x, vector2'y, pattern Vector2)
 import Raylib.Util (whileWindowOpen_)
 import Raylib.Util.Colors (black, rayWhite, red)
 

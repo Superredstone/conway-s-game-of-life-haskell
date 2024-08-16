@@ -1,8 +1,7 @@
 {-# LANGUAGE TupleSections #-}
 
 module Lib
-  ( drawGrid',
-    initializeCells,
+  ( initializeCells,
     vector2Scale,
     vector2Add,
     vector2Divide,
@@ -20,28 +19,13 @@ where
 import Control.Monad (forM_)
 import Data.HashMap
 import GHC.Base (when)
-import GHC.Float (int2Float)
-import Raylib.Core (getMouseDelta, getScreenHeight, getScreenWidth, isKeyDown, isKeyPressed, isMouseButtonDown, setTargetFPS)
-import Raylib.Core.Shapes (drawLine, drawRectangle)
+import Raylib.Core (getMouseDelta, isKeyDown, isKeyPressed, isMouseButtonDown, setTargetFPS)
+import Raylib.Core.Shapes (drawRectangle)
 import Raylib.Types
 import Raylib.Util.Colors (red)
 
 cellSize :: Int
 cellSize = 25
-
-drawGrid' :: Int -> Int -> IO ()
-drawGrid' nx ny = do
-  width <- getScreenWidth
-  height <- getScreenHeight
-  let gapY = round (int2Float height / 20.0)
-  let gapX = round (int2Float width / 20.0)
-
-  forM_
-    [0 .. nx]
-    ( \x -> do
-        forM_ [0 .. ny] (\y -> drawLine 0 (y * gapY) width (y * gapY) red)
-        drawLine (x * gapX) 0 (x * gapX) height red
-    )
 
 initializeCells :: Map (Int, Int) Bool
 initializeCells = fromList []
