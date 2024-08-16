@@ -7,13 +7,14 @@ import Lib (drawCells, handleCameraMovement, handleUpdateMaxFps, handleUpdateTic
 import Raylib.Core
 import Raylib.Core.Shapes (drawCircle)
 import Raylib.Core.Text (drawText)
-import Raylib.Types (Camera2D (Camera2D), MouseButton (MouseButtonLeft), vector2'x, vector2'y, pattern Vector2)
+import Raylib.Types (Camera2D (Camera2D), ConfigFlag (WindowResizable), MouseButton (MouseButtonLeft), vector2'x, vector2'y, pattern Vector2)
 import Raylib.Types.Core (KeyboardKey (KeySpace))
 import Raylib.Util (whileWindowOpen_)
-import Raylib.Util.Colors (black, rayWhite, red)
+import Raylib.Util.Colors (black, rayWhite)
 
 main :: IO ()
 main = do
+  setConfigFlags [WindowResizable]
   window <- initWindow 800 800 "Conway's game of life"
 
   let defaultCamera = Camera2D (Vector2 0 0) (Vector2 0 0) 0 1
