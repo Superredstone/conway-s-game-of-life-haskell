@@ -13,6 +13,7 @@ module Lib
     handleUpdateMaxFps,
     cellSize,
     mousePositionToGrid,
+    handleCameraZoom,
   )
 where
 
@@ -122,5 +123,22 @@ handleUpdateMaxFps fps = do
 
   return newMaxFps
 
+handleCameraZoom :: Camera2D -> IO Camera2D
+handleCameraZoom c = do
+  keyZ <- isKeyPressed KeyZ
+
+  let newZoom =
+        ( case (keyZ, camera2D'zoom c) of
+            (False, _) -> camera2D'zoom c
+            (True, 0.5) -> 1.0
+            (True, 1.0) -> 1.5
+            (True, 1.5) -> 0.5
+            (True, _) -> 1.0
+        )
+
+  return c {camera2D'zoom = newZoom}
+
 mousePositionToGrid :: Vector2 -> Camera2D -> Vector2
-mousePositionToGrid mousePos camera = vector2Divide (vector2Add mousePos (camera2D'target camera)) (fromIntegral cellSize)
+mousePositionToGrid mousePos camera = do
+  let mouseWorldPos = vector2Add (vector2Divide mousePos (Vector2 (camera2D'zoom camera) (camera2D'zoom camera))) (camera2D'target camera)
+  vector2Divide mouseWorldPos (fromIntegral cellSize)

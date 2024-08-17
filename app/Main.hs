@@ -3,11 +3,11 @@
 module Main (main) where
 
 import Data.HashMap (findWithDefault, insert)
-import Lib (drawCells, handleCameraMovement, handleUpdateMaxFps, handleUpdateTickSpeed, initializeCells, mousePositionToGrid, nextCellGeneration)
+import Lib (drawCells, handleCameraMovement, handleCameraZoom, handleUpdateMaxFps, handleUpdateTickSpeed, initializeCells, mousePositionToGrid, nextCellGeneration)
 import Raylib.Core
 import Raylib.Core.Shapes (drawCircle)
 import Raylib.Core.Text (drawText)
-import Raylib.Types (Camera2D (Camera2D), ConfigFlag (WindowResizable), MouseButton (MouseButtonLeft), vector2'x, vector2'y, pattern Vector2)
+import Raylib.Types (Camera2D (Camera2D, camera2D'zoom), ConfigFlag (WindowResizable), MouseButton (MouseButtonLeft), vector2'x, vector2'y, pattern Vector2)
 import Raylib.Types.Core (KeyboardKey (KeySpace))
 import Raylib.Util (whileWindowOpen_)
 import Raylib.Util.Colors (black, rayWhite)
@@ -22,17 +22,18 @@ main = do
       defaultTicks = (1 :: Integer)
       defaultMaxTicks = 5
       defaultMaxFps = 60
+      defaultCameraZoom = (1.0 :: Float)
 
   setTargetFPS defaultMaxFps
 
   whileWindowOpen_
-    ( \(camera, cells, pausing, ticks, maxTicks, maxFps) -> do
-        newCamera <- handleCameraMovement camera
+    ( \(camera, cells, pausing, ticks, maxTicks, maxFps, cameraZoom) -> do
+        movedCamera <- handleCameraMovement camera
         beginDrawing
 
         clearBackground rayWhite
 
-        beginMode2D newCamera
+        beginMode2D movedCamera
         drawCells cells
 
         drawCircle 0 0 5 black
@@ -40,12 +41,15 @@ main = do
         endMode2D
 
         drawText ("[A]/[D] Frame delay: " ++ show maxTicks) 10 10 30 black
-        drawText ("[N] Max FPS: " ++ show maxFps) 10 50 30 black
-        drawText ("[Space] Pause: " ++ show pausing) 10 90 30 black
+        drawText ("[Z] Zoom: " ++ show (camera2D'zoom movedCamera)) 10 50 30 black
+        drawText ("[N] Max FPS: " ++ show maxFps) 10 90 30 black
+        drawText ("[Space] Pause: " ++ show pausing) 10 130 30 black
         endDrawing
 
         newMaxTicks <- handleUpdateTickSpeed maxTicks
         newMaxFps <- handleUpdateMaxFps maxFps
+        newCamera <- handleCameraZoom movedCamera
+        let zoomFactor = camera2D'zoom newCamera
 
         leftMouse <- isMouseButtonPressed MouseButtonLeft
         spacePressed <- isKeyPressed KeySpace
@@ -62,8 +66,8 @@ main = do
             newCellsUserInput = if leftMouse then insert (mouseXGrid, mouseYGrid) (not cellAtMousePos) newCells else newCells
             newPausing = if spacePressed then not pausing else pausing
 
-        return (newCamera, newCellsUserInput, newPausing, newTicks, newMaxTicks, newMaxFps)
+        return (newCamera, newCellsUserInput, newPausing, newTicks, newMaxTicks, newMaxFps, cameraZoom)
     )
-    (defaultCamera, defaultCells, True, defaultTicks, defaultMaxTicks, 60)
+    (defaultCamera, defaultCells, True, defaultTicks, defaultMaxTicks, 60, defaultCameraZoom)
 
   closeWindow (Just window)
